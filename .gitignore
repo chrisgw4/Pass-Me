@@ -1,0 +1,53 @@
+# Miscellaneous
+*.class
+*.log
+*.pyc
+*.swp
+*.DS_Store
+/pass_me/.atom/
+/pass_me/.build/
+/pass_me/.buildlog/
+/pass_me/.history
+/pass_me/.svn/
+/pass_me/.swiftpm/
+/pass_me/migrate_working_dir/
+
+# IntelliJ related
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# The .vscode folder contains launch configuration and tasks you configure in
+# VS Code which you may wish to be included in version control, so this line
+# is commented out by default.
+#.vscode/
+
+# Flutter/Dart/Pub related
+**/doc/api/
+**/ios/Flutter/.last_build_id
+/pass_me/.dart_tool/
+/pass_me/.flutter-plugins-dependencies
+/pass_me/.pub-cache/
+/pass_me/build/
+/pass_me/coverage/
+
+# Symbolication related
+/pass_me/app.*.symbols
+
+# Obfuscation related
+/pass_me/app.*.map.json
+
+# Android Studio will place build artifacts here
+/pass_me/android/app/debug
+/pass_me/android/app/profile
+/pass_me/android/app/release
+
+/pass_me/ios
+/pass_me/android
+/pass_me/linux
+/pass_me/macos
+/pass_me/web
+/pass_me/windows
+/pass_me/test
+
