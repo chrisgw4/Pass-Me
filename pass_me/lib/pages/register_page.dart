@@ -1,3 +1,4 @@
+import "package:cloud_firestore/cloud_firestore.dart";
 import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter/material.dart";
 import "package:pass_me/components/my_button.dart";
@@ -45,14 +46,27 @@ class _RegisterPageState extends State<RegisterPage> {
       try{
         UserCredential? userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(email: emailController.text, password: passwordController.text);
 
+        //create user doc and then add to firestore
+        createUserDocument(userCredential);
+
         //Pop loading circle
-        Navigator.pop(context);
+        if(context.mounted) Navigator.pop(context);
       } on FirebaseAuthException catch (e){
         //Pop loading circle
         Navigator.pop(context);
 
         displayMessageToUser(e.code, context);
       }
+    }
+  }
+
+  //create and collect user doc to firestore
+  Future<void> createUserDocument(UserCredential? userCredential) async {
+    if(userCredential != null && userCredential.user != null){
+      await FirebaseFirestore.instance.collection("User").doc(userCredential.user!.email).set({
+        'email': userCredential.user!.email,
+        'username': usernameController.text,
+      });
     }
   }
 
