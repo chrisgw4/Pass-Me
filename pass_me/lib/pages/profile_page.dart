@@ -20,7 +20,7 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
     Uint8List? _image;
-
+    Uint8List? _uptoimage;
     final FirebaseFirestore _firestore = FirebaseFirestore.instance;
     late final CollectionReference _myCollection = _firestore.collection("User");
 
@@ -42,12 +42,20 @@ class _ProfilePageState extends State<ProfilePage> {
     });
   }
 
+    void selectUpToImage() async{
+      Uint8List img = await pickImage(ImageSource.gallery);
+      setState(() {
+        _uptoimage = img;
+      });
+    }
+
   //current logged in user
     User? currentUser = FirebaseAuth.instance.currentUser;
 
     final TextEditingController nameController = TextEditingController();
-    final TextEditingController bioController = TextEditingController();
-
+    final TextEditingController greetingController = TextEditingController();
+    final TextEditingController upToController = TextEditingController();
+    final TextEditingController questionController = TextEditingController();
   //future for fetching details
   Future<DocumentSnapshot<Map<String, dynamic>>> getUserDetails() async {
     return await FirebaseFirestore.instance
@@ -57,10 +65,11 @@ class _ProfilePageState extends State<ProfilePage> {
   }
   void saveProfile() async {
     String name = nameController.text;
-    String bio = bioController.text;
+    String greeting = greetingController.text;
     String email = currentUser!.email.toString();
-
-    String resp = await StoreData().saveData(email: email, name: name, bio: bio, file: _image!);
+    String upto = upToController.text;
+    String question = questionController.text;
+    String resp = await StoreData().saveData(email: email, name: name, greeting: greeting, file: _image!, uptoimage: _uptoimage!, upto: upto, question: question);
   }
   @override
   Widget build(BuildContext context) {
@@ -86,10 +95,9 @@ class _ProfilePageState extends State<ProfilePage> {
             //extract
             Map<String, dynamic>? user = snapshot.data!.data();
             nameController.text = snapshot.data?["username"];
-            bioController.text = snapshot.data?["greeting"];
-            final Reference ref = FirebaseStorage.instance.refFromURL(user?['pfpimage']);
-
-
+            greetingController.text = snapshot.data?["greeting"];
+            upToController.text = snapshot.data?["upto"];
+            questionController.text = snapshot.data?["question"];
             return Center(
               child: Container(
                 padding: const EdgeInsets.symmetric(
@@ -99,22 +107,25 @@ class _ProfilePageState extends State<ProfilePage> {
                    crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(top: 50.0, left: 25),
+                      padding: const EdgeInsets.only(top: 50.0, left: 0),
                       child: Row(children: [MyBackButton()]),
                     ),
 
-                    const SizedBox(height: 25),
 
-                    // Container(
-                    //   decoration: BoxDecoration(
-                    //     color: Theme.of(context).colorScheme.primary,
-                    //     borderRadius: BorderRadius.circular(20),
-                    //   ),
-                    //   padding: EdgeInsets.all(25),
-                    //   child: Icon(Icons.person, size: 64,),
-                    // ),
-                    const SizedBox(height: 24,),
 
+
+                     // The spacer that pushes the text down
+                    Align(
+                      alignment: Alignment.center,
+                      child: Text(
+                        "Your Profile",
+                        style: const TextStyle(
+                          fontSize: 30,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    //const SizedBox(height:24),
                     Stack(
                       children: [
                         _image != null ?
@@ -126,7 +137,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         CircleAvatar(
                           radius: 64,
 
-                          backgroundImage: NetworkImage(ref.getDownloadURL().toString()),//NetworkImage(
+                          backgroundImage: NetworkImage(user?['pfpimage']),//NetworkImage(
 
                             //'https://icons.veryicon.com/png/o/miscellaneous/common-icons-31/default-avatar-2.png',
                           //),
@@ -138,10 +149,28 @@ class _ProfilePageState extends State<ProfilePage> {
                           ),
                           bottom: -10,
                           left: 80,
+
                         ),
                       ],
                     ),
-                    const SizedBox(height: 24,),
+
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start, // Align children to the start (left)
+                      children: [
+                        const SizedBox(height:8), // The spacer that pushes the text down
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            "Username",
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 4,),
                     TextField(
                       controller: nameController,
                       decoration: const InputDecoration(
@@ -151,34 +180,115 @@ class _ProfilePageState extends State<ProfilePage> {
 
 
                     ),
-                    const SizedBox(height: 24,),
+
+                    const SizedBox(height:8), // The spacer that pushes the text down
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          "Greeting",
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+
+                    const SizedBox(height: 4,),
                     TextField(
-                      controller: bioController,
+                      controller: greetingController,
                       decoration: const InputDecoration(
                         border: OutlineInputBorder(),
-                        hintText: 'Enter Bio',
+                        hintText: 'Enter greeting',
                         contentPadding: EdgeInsets.all(10)),
                     ),
-                    const SizedBox(height: 24,),
-                    ElevatedButton(onPressed: saveProfile, child:
-                    Text('Save Profile',
-                      style: TextStyle(color: Theme.of(context).colorScheme.inversePrimary),
-                    ),
-                    ),
-                    const SizedBox(height: 25),
-                    Text(
-                      user!['username'],
-                      style: const TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
+
+                    const SizedBox(height:8), // The spacer that pushes the text down
+                    Align(
+                      alignment: Alignment.center,
+                      child: Text(
+                        "What I've Been Up To",
+                        style: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
 
-                    const SizedBox(height: 5),
-                    Text(
-                      user!['email'],
-                      style: TextStyle(color: Colors.grey[600]),
+                    const SizedBox(height: 4,),
+
+                    Stack(
+                      children: [
+                        _uptoimage != null
+                            ? ClipRRect(
+                          borderRadius: BorderRadius.circular(10.0), // Adjust the radius for desired corner roundness
+                          child: Image.memory(
+                            _uptoimage!,
+                            width: 200, // Set width to 2 * radius (64 * 2) for consistency
+                            height: 200, // Set height to 2 * radius (64 * 2) for consistency
+                            fit: BoxFit.cover, // Ensures the image covers the area without distortion
+                          ),
+                        )
+                            : ClipRRect(
+                          borderRadius: BorderRadius.circular(10.0), // Adjust the radius for desired corner roundness
+                          child: Image.network(
+                            user?['uptoimage'],
+                            width: 200, // Set width to 2 * radius (64 * 2) for consistency
+                            height: 200, // Set height to 2 * radius (64 * 2) for consistency
+                            fit: BoxFit.cover, // Ensures the image covers the area without distortion
+                          ),
+                        ),
+                        Positioned(
+
+                          child: IconButton(
+                            onPressed: selectUpToImage,
+                            icon: const Icon(Icons.add_a_photo),
+                          ),
+                          bottom: -15,
+                          left: 160,
+                        ),
+                      ],
                     ),
+                    const SizedBox(height: 4,),
+                    TextField(
+                    controller: upToController,
+                    decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    hintText: 'What Have You Been Up To?',
+                    contentPadding: EdgeInsets.all(10)),
+                    ),
+                    const SizedBox(height:8), // The spacer that pushes the text down
+                    Align(
+                      alignment: Alignment.center,
+                      child: Text(
+                        "Question",
+                        style: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(height: 4,),
+                    TextField(
+                      controller: questionController,
+                      decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                          hintText: 'What do you want to ask everyone?',
+                          contentPadding: EdgeInsets.all(10)),
+                    ),
+                    const SizedBox(height: 15,),
+
+              SizedBox(
+                width: 200, // Makes the button full width
+                height: 50, // Optional: Set a specific height
+                child: ElevatedButton(
+                  onPressed: saveProfile,
+                  child: Text(
+                    'Save Profile',
+                    style: TextStyle(color: Theme.of(context).colorScheme.inversePrimary, fontSize:16),
+                  ),
+                ),
+              ),
                   ],
                 ),
               ),

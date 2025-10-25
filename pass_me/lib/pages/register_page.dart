@@ -1,5 +1,6 @@
 import "package:cloud_firestore/cloud_firestore.dart";
 import "package:firebase_auth/firebase_auth.dart";
+import "package:firebase_storage/firebase_storage.dart";
 import "package:flutter/material.dart";
 import "package:pass_me/components/my_button.dart";
 import "package:pass_me/components/my_textfield.dart";
@@ -68,9 +69,9 @@ class _RegisterPageState extends State<RegisterPage> {
         'username': usernameController.text,
         'greeting': "Hi, Nice to Meet You!",
         'upto': "I've been setting up my profile!",
-        'uptoimage': "gs://passme-73d13.firebasestorage.app/Upto_PlaceHolder.png",
+        'uptoimage': "https://firebasestorage.googleapis.com/v0/b/passme-73d13.firebasestorage.app/o/Upto_PlaceHolder.png?alt=media&token=493fe730-d633-41b1-ba27-ef14b2c0b1f8",
         'question': "Why did you join PassMe?",
-        'pfpimage': "gs://passme-73d13.firebasestorage.app/Upto_PlaceHolder.png",
+        'pfpimage': "https://firebasestorage.googleapis.com/v0/b/passme-73d13.firebasestorage.app/o/default-avatar.png?alt=media&token=49d3130a-98ff-4627-a4c0-f1845430afc1",
       });
     }
   }
