@@ -51,3 +51,9 @@
 /pass_me/windows
 /pass_me/test
 
+/pass_me/README.md
+/pass_me/.gitignore
+/pass_me/.metadata
+
+pass_me/.metadata
+pass_me/pubspec.lock
