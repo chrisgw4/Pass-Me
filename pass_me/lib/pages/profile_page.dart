@@ -12,15 +12,14 @@ import 'dart:typed_data';
 import '../components/my_back_button.dart';
 
 class ProfilePage extends StatefulWidget {
-  ProfilePage({super.key});
+  const ProfilePage({super.key});
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-    Uint8List? _image;
-    Uint8List? _uptoimage;
+
     final FirebaseFirestore _firestore = FirebaseFirestore.instance;
     late final CollectionReference _myCollection = _firestore.collection("User");
 
@@ -31,10 +30,12 @@ class _ProfilePageState extends State<ProfilePage> {
         {
           return documentSnapshot;
         }
-      else
+      else {
         return documentSnapshot;
+      }
     }
-
+    Uint8List? _image;
+    Uint8List? _uptoimage;
   void selectImage() async{
     Uint8List img = await pickImage(ImageSource.gallery);
     setState(() {
@@ -64,12 +65,13 @@ class _ProfilePageState extends State<ProfilePage> {
         .get();
   }
   void saveProfile() async {
+
     String name = nameController.text;
     String greeting = greetingController.text;
     String email = currentUser!.email.toString();
     String upto = upToController.text;
     String question = questionController.text;
-    String resp = await StoreData().saveData(email: email, name: name, greeting: greeting, file: _image!, uptoimage: _uptoimage!, upto: upto, question: question);
+    String resp = await StoreData().saveData(email: email, name: name, greeting: greeting, file: _image, uptoimage: _uptoimage, upto: upto, question: question);
   }
   @override
   Widget build(BuildContext context) {

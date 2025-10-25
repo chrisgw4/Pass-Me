@@ -23,8 +23,8 @@ class StoreData {
   Future<String> saveData({
     required String name,
     required String greeting,
-    required Uint8List file,
-    required Uint8List uptoimage,
+    required Uint8List? file,
+    required Uint8List? uptoimage,
     required String upto,
     required String email,
     required String question,
@@ -35,21 +35,32 @@ class StoreData {
     try{
 
       if(name.isNotEmpty || greeting.isNotEmpty) {
-        String imageUrl = await uploadImagetoStorage(email, file);
-        final Reference ref = FirebaseStorage.instance.refFromURL(imageUrl);
-        final downloadUrl = await ref.getDownloadURL();
-
-        String filename = "${email}_upto";
-        String upToUrl = await uploadImagetoStorage(filename, uptoimage);
-        final Reference upToRef = FirebaseStorage.instance.refFromURL(upToUrl);
-        final upToDownloadUrl = await upToRef.getDownloadURL();
-
         final docRef = FirebaseFirestore.instance.collection('User').doc(email);
+        if(file!=null)
+          {
+            String imageUrl = await uploadImagetoStorage(email, file);
+            final Reference ref = FirebaseStorage.instance.refFromURL(imageUrl);
+            final downloadUrl = await ref.getDownloadURL();
+            await docRef.update({
+              'pfpimage': downloadUrl,
+            });
+          }
+        if(uptoimage!=null) {
+          String filename = "${email}_upto";
+          String upToUrl = await uploadImagetoStorage(filename, uptoimage);
+          final Reference upToRef = FirebaseStorage.instance.refFromURL(
+              upToUrl);
+          final upToDownloadUrl = await upToRef.getDownloadURL();
+          await docRef.update({
+            'uptoimage': upToDownloadUrl,
+          });
+        }
+
         await docRef.update({
           'username': name,
           'greeting': greeting,
-          'pfpimage': downloadUrl,
-          'uptoimage': upToDownloadUrl,
+          'upto': upto,
+          'question': question
         });
 
         resp = 'success';
