@@ -66,6 +66,10 @@ class _RegisterPageState extends State<RegisterPage> {
       await FirebaseFirestore.instance.collection("User").doc(userCredential.user!.email).set({
         'email': userCredential.user!.email,
         'username': usernameController.text,
+        'greeting': Text("Hi, Nice to Meet You!"),
+        'upto': Text("I've been setting up my proile!"),
+        'uptoimage': Text("gs://passme-73d13.firebasestorage.app/Upto_PlaceHolder.png"),
+        'question': Text("Why did you join PassMe?"),
       });
     }
   }
