@@ -1,5 +1,7 @@
 
 
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -19,8 +21,19 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
     Uint8List? _image;
 
-    final TextEditingController nameController = TextEditingController();
-    final TextEditingController bioController = TextEditingController();
+    final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+    late final CollectionReference _myCollection = _firestore.collection("User");
+
+
+    Future<DocumentSnapshot> getSpecificDocument(String documentId) async {
+      DocumentSnapshot documentSnapshot = await _myCollection.doc(documentId).get();
+      if (documentSnapshot.exists)
+        {
+          return documentSnapshot;
+        }
+      else
+        return documentSnapshot;
+    }
 
   void selectImage() async{
     Uint8List img = await pickImage(ImageSource.gallery);
@@ -30,7 +43,10 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   //current logged in user
-  User? currentUser = FirebaseAuth.instance.currentUser;
+    User? currentUser = FirebaseAuth.instance.currentUser;
+
+    final TextEditingController nameController = TextEditingController();
+    final TextEditingController bioController = TextEditingController();
 
   //future for fetching details
   Future<DocumentSnapshot<Map<String, dynamic>>> getUserDetails() async {
@@ -42,8 +58,9 @@ class _ProfilePageState extends State<ProfilePage> {
   void saveProfile() async {
     String name = nameController.text;
     String bio = bioController.text;
+    String email = currentUser!.email.toString();
 
-    String resp = await StoreData().saveData(name: name, bio: bio, file: _image!);
+    String resp = await StoreData().saveData(email: email, name: name, bio: bio, file: _image!);
   }
   @override
   Widget build(BuildContext context) {
@@ -68,6 +85,10 @@ class _ProfilePageState extends State<ProfilePage> {
           else if (snapshot.hasData) {
             //extract
             Map<String, dynamic>? user = snapshot.data!.data();
+            nameController.text = snapshot.data?["username"];
+            bioController.text = snapshot.data?["greeting"];
+            final Reference ref = FirebaseStorage.instance.refFromURL(user?['pfpimage']);
+
 
             return Center(
               child: Container(
@@ -93,6 +114,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     //   child: Icon(Icons.person, size: 64,),
                     // ),
                     const SizedBox(height: 24,),
+
                     Stack(
                       children: [
                         _image != null ?
@@ -101,11 +123,13 @@ class _ProfilePageState extends State<ProfilePage> {
                               backgroundImage: MemoryImage(_image!),
                             )
                         :
-                        const CircleAvatar(
+                        CircleAvatar(
                           radius: 64,
-                          backgroundImage: NetworkImage(
-                            'https://icons.veryicon.com/png/o/miscellaneous/common-icons-31/default-avatar-2.png',
-                          ),
+
+                          backgroundImage: NetworkImage(ref.getDownloadURL().toString()),//NetworkImage(
+
+                            //'https://icons.veryicon.com/png/o/miscellaneous/common-icons-31/default-avatar-2.png',
+                          //),
                         ),
                         Positioned(
                           child: IconButton(
@@ -122,8 +146,9 @@ class _ProfilePageState extends State<ProfilePage> {
                       controller: nameController,
                       decoration: const InputDecoration(
                         border: OutlineInputBorder(),
-                      hintText: 'Enter Name',
+                      hintText: 'Enter Username',
                       contentPadding: EdgeInsets.all(10)),
+
 
                     ),
                     const SizedBox(height: 24,),
@@ -136,7 +161,9 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                     const SizedBox(height: 24,),
                     ElevatedButton(onPressed: saveProfile, child:
-                    Text('Save Profile', style: TextStyle(color: Theme.of(context).colorScheme.inversePrimary),),
+                    Text('Save Profile',
+                      style: TextStyle(color: Theme.of(context).colorScheme.inversePrimary),
+                    ),
                     ),
                     const SizedBox(height: 25),
                     Text(
