@@ -3,7 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:pass_me/auth/auth.dart';
 import 'package:pass_me/auth/login_or_register.dart';
 import 'package:pass_me/firebase_options.dart';
+import 'package:pass_me/pages/home_page.dart';
+import 'package:pass_me/pages/profile_page.dart';
 import 'package:pass_me/pages/register_page.dart';
+import 'package:pass_me/pages/users_page.dart';
 import 'package:pass_me/theme/dark_mode.dart';
 import 'package:pass_me/theme/light_mode.dart';
 import 'pages/login_page.dart';
@@ -24,6 +27,12 @@ class MyApp extends StatelessWidget {
       home: const AuthPage(),
       theme: light_mode,
       darkTheme: dark_mode,
+      routes: {
+        '/login_register_page':(context) => LoginOrRegister(),
+        '/home_page': (context) => HomePage(),
+        '/profile_page': (context) => ProfilePage(),
+        '/users_page': (context) => UsersPage()
+      },
     );
   }
 }

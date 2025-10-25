@@ -85,4 +85,5 @@ class DefaultFirebaseOptions {
     storageBucket: 'passme-73d13.firebasestorage.app',
     measurementId: 'G-61T7B3F9KQ',
   );
+
 }
