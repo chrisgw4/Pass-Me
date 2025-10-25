@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:pass_me/helper/helped_functions.dart';
 
+import '../components/my_back_button.dart';
+
 
 class UsersPage extends StatelessWidget {
   const UsersPage({super.key});
@@ -9,11 +11,7 @@ class UsersPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Users"),
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        elevation: 0,
-      ),
+
       body: StreamBuilder(
         stream: FirebaseFirestore.instance.collection("User").snapshots(),
         builder: (context, snapshot) {
@@ -36,17 +34,36 @@ class UsersPage extends StatelessWidget {
           // get all user
           final users = snapshot.data!.docs;
 
-          return ListView.builder(
-            itemCount: users.length,
-            itemBuilder: (context, index) {
-              //indiv user get
-              final user = users[index];
+          return Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(
+                  top: 50.0,
+                  left: 25,
+                ),
+                child: Row(
+                  children: [
+                    MyBackButton(),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: ListView.builder(
+                  padding: EdgeInsets.all(0),
+                  itemCount: users.length,
+                  itemBuilder: (context, index) {
+                    //indiv user get
+                    final user = users[index];
 
-              return ListTile(
-                title: Text(user['username']),
-                subtitle: Text(user['email']),
-              );
-            }
+                    return ListTile(
+                      title: Text(user['username']),
+                      subtitle: Text(user['email']),
+                    );
+                  }
+                ),
+              )
+
+            ],
           );
         }
       )
