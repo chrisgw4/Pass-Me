@@ -106,8 +106,13 @@ class HomePage extends StatelessWidget {
                                   ),
                                 ),
                               ),
+                              const Divider(
+                                height: 160,
+                                thickness: 2,
+                              ),
                             ],
                           ),
+
                         ]),
                   ),
                 );
