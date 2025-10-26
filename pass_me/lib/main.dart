@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:pass_me/auth/auth.dart';
@@ -23,7 +24,6 @@ import 'package:permission_handler/permission_handler.dart';
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-
 
 
   // location permission
@@ -61,50 +61,7 @@ void main() async{
   // Android 12+
   await Permission.nearbyWifiDevices.request();
 
-  const String userName = "AdvertiserName";
-  const Strategy strategy = Strategy.P2P_CLUSTER;
 
-  try {
-    bool success = await Nearby().startAdvertising(
-      userName,
-      strategy,
-      onConnectionInitiated: (String id, ConnectionInfo info) {
-        // Called whenever a discoverer requests connection
-        print("Connection initiated by: $id");
-      },
-      onConnectionResult: (String id, Status status) {
-        // Called when connection is accepted/rejected
-        print("Connection result for $id: $status");
-      },
-      onDisconnected: (String id) {
-        // Callled whenever a discoverer disconnects from advertiser
-        print("Disconnected from: $id");
-      },
-      serviceId: "com.yourdomain.appname", // IMPORTANT: Must be unique to your app
-    );
-    print("Advertising started successfully: $success");
-  } catch (exception) {
-    // Handle platform exceptions (e.g., Bluetooth disabled, permissions still denied)
-    print("Error starting advertising: $exception");
-  }
-
-  try {
-    bool a = await Nearby().startDiscovery(
-      userName,
-      strategy, // https://developers.google.com/nearby/connections/strategies
-      onEndpointFound: (String id,String userName, String serviceId) {
-        print("Caught Someone");
-        // called when an advertiser is found
-      },
-      onEndpointLost: (String? id) {
-        print("Lost someone");
-        //called when an advertiser is lost (only if we weren't connected to it )
-      },
-      serviceId: "com.yourdomain.appname", // uniquely identifies your app
-    );
-  } catch (e) {
-    // platform exceptions like unable to start bluetooth or insufficient permissions
-  }
 
   runApp(MyApp());
 }
