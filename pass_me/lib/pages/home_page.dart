@@ -3,6 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'package:image_picker/image_picker.dart';
+import 'package:pass_me/components/my_connection.dart';
+import '../components/connection_list.dart';
 import '../components/my_drawer.dart';
 
 
@@ -105,16 +107,6 @@ class HomePage extends StatelessWidget {
             collection.doc(userName).set({
               "answer": "I am happy!",
             });
-
-            // await FirebaseFirestore.instance
-            //     .collection(
-            //     "/User" + "/" + currentUser!.email.toString())
-            //     .doc(userName)
-            //     .set({
-            //   'email': userName,
-            //   'answer': "I love you!",
-            // });
-            // print(FirebaseFirestore.instance.collection("User/" + currentUser!.email.toString()).doc(userName));
           }
 
           // to be called by discover whenever an endpoint is found
@@ -228,10 +220,15 @@ class HomePage extends StatelessWidget {
                                 height: 160,
                                 thickness: 2,
                               ),
+
+                              // MyConnection("chrisgw4@gmail.com"),
+
                             ],
                           ),
 
+                          ConnectionList(),
                         ]),
+
                   ),
                 );
               }
@@ -240,6 +237,7 @@ class HomePage extends StatelessWidget {
               }
             }
               ),
+
               );
 
   }

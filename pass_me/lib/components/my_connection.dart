@@ -49,6 +49,21 @@ class _MyConnectionState extends State<MyConnection> {
             //extract
             Map<String, dynamic>? user = snapshot.data!.data();
 
+            return Row(
+              children: [
+                CircleAvatar(
+                  radius: 36,
+                  backgroundImage: NetworkImage(snapshot.data?["pfpimage"]),
+
+                ),
+                  SizedBox(width: 10,),
+                  Text(snapshot.data?["username"],
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),)
+
+
+              ],
+
+            );
             return Text(snapshot.data?["username"]);
           }
           return Text("Nothing found");
