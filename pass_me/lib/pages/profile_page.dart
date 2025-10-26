@@ -36,6 +36,7 @@ class _ProfilePageState extends State<ProfilePage> {
     }
     Uint8List? _image;
     Uint8List? _uptoimage;
+
   void selectImage() async{
     Uint8List img = await pickImage(ImageSource.gallery);
     setState(() {
@@ -96,10 +97,22 @@ class _ProfilePageState extends State<ProfilePage> {
           else if (snapshot.hasData) {
             //extract
             Map<String, dynamic>? user = snapshot.data!.data();
-            nameController.text = snapshot.data?["username"];
-            greetingController.text = snapshot.data?["greeting"];
-            upToController.text = snapshot.data?["upto"];
-            questionController.text = snapshot.data?["question"];
+            if (nameController.text == "") {
+              nameController.text = snapshot.data?["username"];
+            }
+
+            if (greetingController.text == "") {
+              greetingController.text = snapshot.data?["greeting"];
+            }
+
+            if (upToController.text == "") {
+              upToController.text = snapshot.data?["upto"];
+            }
+
+            if (questionController.text == "") {
+              questionController.text = snapshot.data?["question"];
+            }
+
             return Center(
               child: Container(
                 padding: const EdgeInsets.symmetric(
@@ -145,12 +158,12 @@ class _ProfilePageState extends State<ProfilePage> {
                           //),
                         ),
                         Positioned(
+                          bottom: -10,
+                          left: 80,
                           child: IconButton(
                             onPressed: selectImage,
                             icon: const Icon(Icons.add_a_photo),
                           ),
-                          bottom: -10,
-                          left: 80,
 
                         ),
                       ],
