@@ -94,32 +94,32 @@ class HomePage extends StatelessWidget {
         strategy, // https://developers.google.com/nearby/connections/strategies
 
 
-        onEndpointFound: (String id,String userName, String serviceId) {
+        onEndpointFound: (String id,String userName, String serviceId) async {
           print("Caught Someone");
           // called when an advertiser is found
           print(userName.toString());
+          if(currentUser != null ) {
+            var user = FirebaseFirestore.instance.collection("User").doc(currentUser!.email.toString());
+            var collection = user.collection("Connections");
 
+            collection.doc(userName).set({
+              "answer": "I am happy!",
+            });
+
+            // await FirebaseFirestore.instance
+            //     .collection(
+            //     "/User" + "/" + currentUser!.email.toString())
+            //     .doc(userName)
+            //     .set({
+            //   'email': userName,
+            //   'answer': "I love you!",
+            // });
+            // print(FirebaseFirestore.instance.collection("User/" + currentUser!.email.toString()).doc(userName));
+          }
 
           // to be called by discover whenever an endpoint is found
           // callbacks are similar to those in startAdvertising method
-          try{
-            Nearby().requestConnection(
-              userName,
-              id,
-              onConnectionInitiated: (id, info) {
-                print("Connection Initiated");
-              },
-              onConnectionResult: (id, status) {
-                print("Connect Result: " + status.toString());
-              },
-              onDisconnected: (id) {
-                print("Disconnected");
-              },
-            );
 
-          }catch(exception){
-            // called if request was invalid
-          }
 
         },
         onEndpointLost: (String? id) {
