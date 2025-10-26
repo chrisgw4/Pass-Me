@@ -23,7 +23,7 @@ import 'package:permission_handler/permission_handler.dart';
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  
+
 
 
   // location permission
@@ -86,6 +86,24 @@ void main() async{
   } catch (exception) {
     // Handle platform exceptions (e.g., Bluetooth disabled, permissions still denied)
     print("Error starting advertising: $exception");
+  }
+
+  try {
+    bool a = await Nearby().startDiscovery(
+      userName,
+      strategy, // https://developers.google.com/nearby/connections/strategies
+      onEndpointFound: (String id,String userName, String serviceId) {
+        print("Caught Someone");
+        // called when an advertiser is found
+      },
+      onEndpointLost: (String? id) {
+        print("Lost someone");
+        //called when an advertiser is lost (only if we weren't connected to it )
+      },
+      serviceId: "com.yourdomain.appname", // uniquely identifies your app
+    );
+  } catch (e) {
+    // platform exceptions like unable to start bluetooth or insufficient permissions
   }
 
   runApp(MyApp());
