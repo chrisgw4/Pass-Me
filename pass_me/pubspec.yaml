@@ -39,6 +39,10 @@ dependencies:
   cloud_firestore: ^6.0.3
   image_picker: ^1.2.0
   firebase_storage: ^13.0.3
+  nearby_connections: ^4.3.0
+  device_info_plus: ^12.2.0
+  location: ^8.0.1
+  permission_handler: ^12.0.1
 dev_dependencies:
   flutter_test:
     sdk: flutter
