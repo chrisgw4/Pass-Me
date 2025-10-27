@@ -15,7 +15,6 @@ class ConnectionList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-
       child:
         StreamBuilder<QuerySnapshot>( // Add explicit type for better safety
           stream: FirebaseFirestore.instance.collection("User").doc(currentUser!.email).collection("Connections").snapshots(),
@@ -41,72 +40,27 @@ class ConnectionList extends StatelessWidget {
             // get all user
             final users = snapshot.data!.docs;
 
-            // return ListView.builder(
-            //     itemCount: users.length,
-            //     itemBuilder: (context, index) {
-            //       final user = users[index];
-            //       print(user['email']);
-            //       return Text("Deez");
-            //     }
-            // );
+
+
             return
                 Expanded(
                   child: ListView.builder(
                     itemCount: users.length,
                     itemBuilder: (context, index) {
                       final user = users[index];
-                      // print(user.data());
-                      // print(user.id);
-                      return MyConnection(user.id);
+
+                      // Color c = Theme.of(context).colorScheme.secondary;
+
+                      // Container with bottom padding between users
+                      return Container(
+                        key: ValueKey(user.id),
+                        padding: EdgeInsets.only(bottom: 10, top: 10, left: 5, right: 5),
+                        child: MyConnection(user.id),
+                      );
                       }
-
-
                   ),
-
-
                 );
-
-
-            // final user = users[index];
-            // return MyConnection(user['email']);
-            // return Column(
-            //   children: [
-            //     Padding(
-            //       padding: const EdgeInsets.only(
-            //         top: 50.0,
-            //         left: 25,
-            //       ),
-            //     ),
-            //     Expanded(
-            //       child: ListView.builder(
-            //           padding: const EdgeInsets.all(0),
-            //           itemCount: users.length,
-            //           itemBuilder: (context, index) {
-            //             // indiv user get
-            //             final user = users[index];
-            //             return MyConnection(user['email']);
-            //             return ListTile(
-            //               title: Text(user['username']),
-            //               subtitle: Text(user['email']),
-            //
-            //               onTap: () {
-            //                 // Navigate to the new page and pass the DocumentSnapshot
-            //                 Navigator.push(
-            //                   context,
-            //                   MaterialPageRoute(
-            //                     builder: (context) => UserPage(
-            //                       userSnapshot: user, // user is already a DocumentSnapshot
-            //                     ),
-            //                   ),
-            //                 );
-            //               },
-            //             );
-            //           }
-            //       ),
-            //     ), // <-- Missing closing parenthesis was here
-            //   ],
-            // );
-          }, // <-- Missing closing parenthesis was here
+          },
         ),
 
     );

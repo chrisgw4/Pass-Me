@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 
-
 class MyConnection extends StatefulWidget {
 
   late String user_identifier = "";
@@ -33,42 +32,80 @@ class _MyConnectionState extends State<MyConnection> {
   @override
   Widget build(BuildContext context) {
     var snapshot = FirebaseFirestore.instance.collection("User").doc(user_identifier);
-    return FutureBuilder<DocumentSnapshot<Map<String, dynamic>>>(
-        future: getUserDetails(),
+
+    // Use a stream builder so it will update live when a user updates profile
+    return StreamBuilder(
+        stream: FirebaseFirestore.instance.collection("User").doc(user_identifier).snapshots(),
         builder: (context, snapshot) {
-          //loading
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          }
+
           //error
-          else if (snapshot.hasError) {
-            return Text("Error: ${snapshot.error}");
+          if(snapshot.hasError) {
+            // Note: displayMessageToUser might need 'await' if it returns a Future
+            return const Center(child: Text("Error loading users."));
           }
-          //data got
-          else if (snapshot.hasData) {
-            //extract
-            Map<String, dynamic>? user = snapshot.data!.data();
 
-            return Row(
-              children: [
-                CircleAvatar(
-                  radius: 36,
-                  backgroundImage: NetworkImage(snapshot.data?["pfpimage"]),
-
-                ),
-                  SizedBox(width: 10,),
-                  Text(snapshot.data?["username"],
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),)
-
-
-              ],
-
+          //loading
+          if(snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(),
             );
-            return Text(snapshot.data?["username"]);
           }
-          return Text("Nothing found");
+
+          if(snapshot.data == null) {
+            return const Center(child: Text("No Users Found"));
+          }
+
+          // get all user
+          final user_data = snapshot.data!.data();
+          
+          if (user_data != null)
+            {
+              return Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+
+                children: [
+                  CircleAvatar(
+                    radius: 36,
+                    backgroundImage: NetworkImage(user_data["pfpimage"]),
+                  ),
+
+                  SizedBox(width: 10,),
+
+                  Expanded(//color: Colors.red.shade100,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text(snapshot.data?["username"],
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                            color: Theme.of(context).colorScheme.inversePrimary,
+                          ),
+                          softWrap: true,
+                        ),
+
+                        Text("" + snapshot.data?["greeting"],
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Theme.of(context).colorScheme.tertiary,
+                          ),
+                          softWrap: true,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+
+                        
+                      ],
+                    ),
+                  ),
+                ],
+              );
+            }
+          
+          return Text("nothing to see here");
         }
-        );
+    );
   }
 }
 

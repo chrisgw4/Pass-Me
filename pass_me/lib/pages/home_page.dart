@@ -27,6 +27,8 @@ class HomePage extends StatelessWidget {
 
   //logout user
   void logout(){
+    Nearby().stopAdvertising();
+    Nearby().stopDiscovery();
     FirebaseAuth.instance.signOut();
   }
   User? currentUser = FirebaseAuth.instance.currentUser;
@@ -126,8 +128,6 @@ class HomePage extends StatelessWidget {
     } catch (e) {
       // platform exceptions like unable to start bluetooth or insufficient permissions
     }
-
-
   }
 
 
@@ -148,8 +148,9 @@ class HomePage extends StatelessWidget {
       drawer: MyDrawer(
 
       ),
-        body: FutureBuilder<DocumentSnapshot<Map<String, dynamic>>>(
-            future: getUserDetails(),
+        // Auto update Home Page Profile Picture and Name when it is changed in databse
+        body: StreamBuilder<DocumentSnapshot>(
+            stream: FirebaseFirestore.instance.collection("User").doc(currentUser!.email).snapshots(),
             builder: (context, snapshot) {
               //loading
               if (snapshot.connectionState == ConnectionState.waiting) {
@@ -162,7 +163,9 @@ class HomePage extends StatelessWidget {
               //data got
               else if (snapshot.hasData) {
                 //extract
-                Map<String, dynamic>? user = snapshot.data!.data();
+                // final user_data = snapshot.data!.data();
+
+                var user = snapshot.data;
 
                 return Center(
                   child: Container(
@@ -172,35 +175,13 @@ class HomePage extends StatelessWidget {
                     child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          //   Padding(
-                          //   padding: const EdgeInsets.only(top: 50.0, left: 0),
-                          //   child: Row(children: [MyBackButton()]),
-                          // ),
-
-
-                          // The spacer that pushes the text down
-                          // Align(
-                          //   alignment: Alignment.center,
-                          //   child: Text(
-                          //     "Your Profile",
-                          //     style: const TextStyle(
-                          //       fontSize: 30,
-                          //       fontWeight: FontWeight.bold,
-                          //     ),
-                          //   ),
-                          // ),
-                          //const SizedBox(height:24),
                           Stack(
                             children: [
-
                               CircleAvatar(
                                 radius: 64,
                                 backgroundImage: NetworkImage(
                                     user?['pfpimage']),
                               ),
-
-
-
                             ],
                           ),
                           Column(
@@ -217,16 +198,16 @@ class HomePage extends StatelessWidget {
                                 ),
                               ),
                               const Divider(
-                                height: 160,
+                                height: 60,
                                 thickness: 2,
                               ),
-
-                              // MyConnection("chrisgw4@gmail.com"),
 
                             ],
                           ),
 
+
                           ConnectionList(),
+
                         ]),
 
                   ),
