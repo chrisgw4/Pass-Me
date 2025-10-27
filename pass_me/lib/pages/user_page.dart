@@ -28,8 +28,9 @@ class UserPage extends StatelessWidget {
     return Scaffold(
       body: Center(
         child: SingleChildScrollView(
+          padding: EdgeInsets.only(bottom: 128),
           child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 32),
+            padding: const EdgeInsets.only(left: 32, right: 32),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [

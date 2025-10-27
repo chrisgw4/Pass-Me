@@ -57,7 +57,9 @@ class ConnectionList extends StatelessWidget {
                         padding: EdgeInsets.only(bottom: 10, top: 10, left: 5, right: 5),
                         child: MyConnection(user.id),
                       );
-                      }
+                      },
+
+                    padding: EdgeInsets.only(bottom: 64),
                   ),
                 );
           },

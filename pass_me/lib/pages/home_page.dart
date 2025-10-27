@@ -169,9 +169,8 @@ class HomePage extends StatelessWidget {
 
                 return Center(
                   child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 48,
-                    ),
+                    padding: EdgeInsets.only(left: 48, right: 48),
+
                     child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [

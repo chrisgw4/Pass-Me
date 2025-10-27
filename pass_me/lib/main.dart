@@ -30,6 +30,7 @@ void main() async{
   await Permission.location.isGranted;       // Check Permission
   await Permission.location.request();       // Ask
 
+
   // Check Location Status
   await Permission.location.serviceStatus.isEnabled;
 
@@ -42,13 +43,15 @@ void main() async{
 
 
   // Bluetooth permissions
-  bool granted = !(await Future.wait([        // Check Permissions
+  bool granted = !(await Future.wait([ // Check Permissions
     Permission.bluetooth.isGranted,
     Permission.bluetoothAdvertise.isGranted,
     Permission.bluetoothConnect.isGranted,
     Permission.bluetoothScan.isGranted,
   ])).any((element) => false);
-  [                                           // Ask Permissions
+
+
+  await [   // Ask Permissions
     Permission.bluetooth,
     Permission.bluetoothAdvertise,
     Permission.bluetoothConnect,
@@ -60,7 +63,6 @@ void main() async{
 
   // Android 12+
   await Permission.nearbyWifiDevices.request();
-
 
 
   runApp(MyApp());

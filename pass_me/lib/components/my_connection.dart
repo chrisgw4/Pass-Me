@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import '../pages/user_page.dart';
+
 
 class MyConnection extends StatefulWidget {
 
@@ -28,6 +30,10 @@ class _MyConnectionState extends State<MyConnection> {
   Future<DocumentSnapshot<Map<String, dynamic>>> getUserDetails() async {
     return await FirebaseFirestore.instance.collection("User").doc(user_identifier).get();
   }
+
+
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -57,17 +63,40 @@ class _MyConnectionState extends State<MyConnection> {
 
           // get all user
           final user_data = snapshot.data!.data();
-          
+          DocumentSnapshot user_future ;
+
           if (user_data != null)
             {
               return Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
 
                 children: [
-                  CircleAvatar(
-                    radius: 36,
-                    backgroundImage: NetworkImage(user_data["pfpimage"]),
+                  FutureBuilder(
+                      future: FirebaseFirestore.instance.collection("User").doc(user_identifier).get(),
+                      builder: (context, snapshot) {
+
+                        return GestureDetector(
+                          child: CircleAvatar(
+                            radius: 36,
+                            backgroundImage: NetworkImage(user_data["pfpimage"]),
+
+                          ),
+                          onTap: () {
+                            // Navigate to the new page and pass the DocumentSnapshot
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => UserPage(
+                                  userSnapshot: snapshot.data!,
+                                ),
+                              ),
+                            );
+                          },
+                        );
+                      }
                   ),
+
+
 
                   SizedBox(width: 10,),
 
