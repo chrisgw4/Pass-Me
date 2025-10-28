@@ -1,26 +1,22 @@
 
 # PassMe
 
+![PassMe Logo](https://lh3.googleusercontent.com/pw/AP1GczPqo-665lV4UIRoRmrXH2HzDZ09yC2yhcz2ZluMkuUdxmrlCFOeqkBjboXVDlkd-n1cHWLfyW_JoNWeX8sN64ssFJmAGOoLE6CVHLaqFmb_4ulKRjoRkJkAjTlDshoYsPhHv1nhqn2hjOxKe_NSFX01=w1445-h408-s-no-gm?authuser=0)
+
 ## Inspiration
 
-> We were majorly inspired by Nintendo's StreetPass to create a social
-> app for your phone.
+> We were majorly inspired by Nintendo's StreetPass to create a social app for your phone.
+
+![StreetPass Logo](https://upload.wikimedia.org/wikipedia/en/8/84/StreetPass_Mii_Plaza_logo.png)
 
 ## What it does
 
-> This is a social app that allows you to meet people as you pass by
-> them on the street. The app prompts you to create a profile that asks
-> you what you have been up to during the week and gives you the
-> opportunity to ask people a question. Others that happen to pass by
-> you can answer to the said question and you can see their responses.
-> You, respectively, can answer others questions as well.
+> This is a social app that allows you to meet people as you pass by them on the street. The app prompts you to create a profile that asks you what you have been up to during the week and gives you the opportunity to ask people a question. Others that happen to pass by you can answer to the said question and you can see their responses. You, respectively, can answer others questions as well.
 
 
 ## How we built it
 
-> We built the app for Android in Android Studio utilizing Flutter. We
-> also implemented the Google Nearby Connections API to get the pass by
-> function to work.
+> We built the app for Android in Android Studio utilizing Flutter. We also implemented the Google Nearby Connections API to get the pass by function to work.
 
 ## Challenges we ran into
 
@@ -44,3 +40,4 @@
 > small minigames to incentivize people meeting each other when using
 > the app. Moderation features would also be a must have to further
 > expand the app.
+
